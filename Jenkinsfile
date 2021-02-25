@@ -16,6 +16,7 @@ pipeline {
         stage("Testing"){
             steps{
                 sh 'ls'
+                sh 'pip install -r requirements.txt'
                 dir('./testing'){
                     sh 'pwd'
                     sh 'python tests.py'
