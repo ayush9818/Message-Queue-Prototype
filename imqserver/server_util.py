@@ -32,7 +32,7 @@ class ServerUtils(object):
             self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server.bind((host, port))
-            self.server.listen(100)
+            self.server.listen(BUFFER_SIZE)
         except socket.error as errorMessage:
             raise Exception(errorMessage)
         self.client_connection = {}
