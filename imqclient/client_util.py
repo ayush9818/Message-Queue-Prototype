@@ -6,7 +6,7 @@ import socket
 import threading
 from imqclient.constant import *
 from request import Request
-from imqclient.parser import Parser
+from parser import Parser
 
 parser = Parser()
 

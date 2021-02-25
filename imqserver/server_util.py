@@ -16,7 +16,7 @@ from imqserver.message import *
 import re
 import imqserver.db_utils as du
 from request import Request
-from imqserver.parser import Parser
+from parser import Parser
 from imqserver.CommandParser import CommandParser
 parser = Parser()
 cmd_parser = CommandParser()
