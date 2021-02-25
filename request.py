@@ -1,4 +1,4 @@
-from imqserver.imqProtocol import imqProtocol
+from imqProtocol import imqProtocol
 
 class Request(imqProtocol):
 
