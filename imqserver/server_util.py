@@ -15,7 +15,7 @@ from imqserver.MessageQueue import MessageQueue
 from imqserver.message import *
 import re
 import imqserver.db_utils as du
-from imqserver.request import Request
+from request import Request
 from imqserver.parser import Parser
 from imqserver.CommandParser import CommandParser
 parser = Parser()

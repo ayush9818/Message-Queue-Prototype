@@ -5,7 +5,7 @@ sys.path.insert(1,os.path.dirname(os.getcwd()))
 import socket
 import threading
 from imqclient.constant import *
-from imqclient.request import Request
+from request import Request
 from imqclient.parser import Parser
 
 parser = Parser()
@@ -73,7 +73,7 @@ class ClientUtils():
                     self.client.send(str.encode(encoded_header))
                     response = self.rcv_msg()
                     print(response)
-        
+
                 return response
 
 
