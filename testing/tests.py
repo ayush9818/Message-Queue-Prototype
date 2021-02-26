@@ -1,4 +1,5 @@
 import sys
+import os
 sys.path.append('..')
 
 
@@ -21,10 +22,6 @@ counter = 0
 class TESTCASES(unittest.TestCase):
 
     def setUp(self):
-        db_name="client_server.db"
-        self.server_thread=threading.Thread(target=run_server,args=(db_name,))
-        self.server_thread.start()
-        time.sleep(0.1)
         self.client = ClientUtils()
 
     def test_connection(self):
@@ -43,20 +40,19 @@ class TESTCASES(unittest.TestCase):
         server_response = self.client.write(commands,debug=True).split(" ")[-1]
         self.assertEqual(server_response,"CONNECTED")
 
-    # def test_admin(self):
-    #     # client=ClientUtils()
-    #     server_response=self.client.CONNECT_SERVER()
-    #     # # print("Server response is {}".format(server_response))
-    #
-    #     commands = ["imq connect -r admin", "imq register -t sports"]
-    #     server_response = self.client.write(commands,debug=True)
-    #     self.assertEqual(server_response,"Topic Registered")
+    def test_admin(self):
+        # client=ClientUtils()
+        server_response=self.client.CONNECT_SERVER()
+        # # print("Server response is {}".format(server_response))
+
+        commands = ["imq connect -r admin", "imq register -t sports"]
+        server_response = self.client.write(commands,debug=True)
+        self.assertEqual(server_response,"Topic Registered")
 
 
 
     def test_pub_connection(self):
         server_response=self.client.CONNECT_SERVER()
-        # # print("Server response is {}".format(server_response))
 
         commands = ["imq connect -r pub -t sports"]
         server_response = self.client.write(commands,debug=True).split(" ")[-1]
@@ -102,8 +98,7 @@ class TESTCASES(unittest.TestCase):
     def test_func(self):
         self.assertRaises(SystemExit, func)
 
-    # def test_break(self):
-    #     self.assertEqual(,3)
+
 
     def tearDown(self):
         global counter
@@ -111,11 +106,9 @@ class TESTCASES(unittest.TestCase):
 
         if counter>=9:
             os._exit()
-            # with self.assertRaises(SystemExit) as cm:
-            #     sys.exit(0)
+
         print('TearDown')
-        #self.assertEqual(2,3)
-        self.server_thread.join()
+
 
 
 
@@ -128,12 +121,16 @@ def run_server(db_name):
 
 
 if __name__=='__main__':
-    # db_name="client_server.db"
-    # server_thread=threading.Thread(target=run_server,args=(db_name,))
-    # server_thread.start()
-    # time.sleep(0.1)
+    db_name="client_server.db"
+
+    if os.path.exists(db_name) == True:
+        os.remove(db_name)
+
+    server_thread=threading.Thread(target=run_server,args=(db_name,))
+    server_thread.start()
+    time.sleep(0.1)
 
 
     unittest.main(failfast=True)
-    #server_thread.join()
+    server_thread.join()
     sys.exit(0)
