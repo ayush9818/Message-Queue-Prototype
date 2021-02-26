@@ -2,15 +2,15 @@
 import sys
 import os
 
-sys.path.insert(0,'..')
 sys.path.insert(1,os.path.dirname(os.getcwd()))
+
 
 import sqlite3 as sql
 import imqserver.db_utils as du
 #from imqserver.database import *
 from imqserver.server_util import *
 
-from database import *
+from imqserver.database import *
 
 class Server(object):
 

@@ -5,8 +5,8 @@ sys.path.insert(1,os.path.dirname(os.getcwd()))
 import socket
 import threading
 from imqclient.constant import *
-from request import Request
-from parser import Parser
+from imqclient.request import Request
+from imqclient.parser import Parser
 
 parser = Parser()
 

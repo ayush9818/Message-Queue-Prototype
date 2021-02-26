@@ -1,5 +1,5 @@
-from imqProtocol import  imqProtocol
-from request import Request
+from imqclient.imqProtocol import  imqProtocol
+from imqclient.request import Request
 import jsonpickle
 import json
 

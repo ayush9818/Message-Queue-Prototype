@@ -1,8 +1,9 @@
 #from imqserver.database import *
 
 import sys
-sys.path.append("..")
-from database import *
+import os
+sys.path.insert(1,os.path.dirname(os.getcwd()))
+from imqserver.database import *
 
 
 

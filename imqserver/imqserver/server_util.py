@@ -1,7 +1,8 @@
 import sys
 import os
 
-sys.path.insert(0,'..')
+sys.path.insert(1,os.path.dirname(os.getcwd()))
+
 
 import socket
 import threading
@@ -10,13 +11,13 @@ import time
 import datetime
 import sqlite3 as sql
 from imqserver.constant import *
-from database import *
+from imqserver.database import *
 from imqserver.MessageQueue import MessageQueue
 from imqserver.message import *
 import re
 import imqserver.db_utils as du
-from request import Request
-from parser import Parser
+from imqserver.request import Request
+from imqserver.parser import Parser
 from imqserver.CommandParser import CommandParser
 parser = Parser()
 cmd_parser = CommandParser()
