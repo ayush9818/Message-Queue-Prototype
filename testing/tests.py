@@ -40,14 +40,14 @@ class TESTCASES(unittest.TestCase):
         server_response = self.client.write(commands,debug=True).split(" ")[-1]
         self.assertEqual(server_response,"CONNECTED")
 
-    def test_admin(self):
-        # client=ClientUtils()
-        server_response=self.client.CONNECT_SERVER()
-        # # print("Server response is {}".format(server_response))
-
-        commands = ["imq connect -r admin", "imq register -t sports"]
-        server_response = self.client.write(commands,debug=True)
-        self.assertEqual(server_response,"Topic Registered")
+    # def test_admin(self):
+    #     # client=ClientUtils()
+    #     server_response=self.client.CONNECT_SERVER()
+    #     # # print("Server response is {}".format(server_response))
+    #
+    #     commands = ["imq connect -r admin", "imq register -t sports"]
+    #     server_response = self.client.write(commands,debug=True)
+    #     self.assertEqual(server_response,"Topic Registered")
 
 
 
@@ -100,17 +100,6 @@ class TESTCASES(unittest.TestCase):
 
 
 
-    def tearDown(self):
-        global counter
-        counter+=1
-
-        if counter>=9:
-            os._exit()
-
-        print('TearDown')
-
-
-
 
 
 def run_server(db_name):
@@ -123,14 +112,11 @@ def run_server(db_name):
 if __name__=='__main__':
     db_name="client_server.db"
 
-    if os.path.exists(db_name) == True:
-        os.remove(db_name)
-
     server_thread=threading.Thread(target=run_server,args=(db_name,))
     server_thread.start()
     time.sleep(0.1)
 
 
-    unittest.main(failfast=True)
+    unittest.main()
     server_thread.join()
     sys.exit(0)
