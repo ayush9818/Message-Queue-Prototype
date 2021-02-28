@@ -170,15 +170,11 @@ class ServerUtils(object):
             client.send(self.getServerReply("No Topics"))
 
     def handle(self,client,address,db):
-        print("in handle")
         while True:
             try:
-                print("here")
                 command = self.DecodeClientData(client.recv(RECV_BYTES))
                 cmd_response = cmd_parser.parse_commands(command)
-                print(cmd_response)
                 db_topic_list = du.fetch_topics(db)
-                print(db_topic_list)
                 roles_list = ['pub', 'sub', 'admin']
                 if type(cmd_response) is dict:
 
@@ -230,7 +226,6 @@ class ServerUtils(object):
                             if self.client_connection[address]["role"] == "sub":
                                 topic = self.client_connection[address]["topic"]
                                 messages = self.PullMessages(client,address,db,topic)
-                                print(messages)
                                 client.send(self.getServerReply("M___{}".format(messages)))
                             else:
                                 client.send(self.getServerReply(SUB_CONNECTION_ERROR))
@@ -243,14 +238,17 @@ class ServerUtils(object):
                                 client.send(self.getServerReply(ADMIN_CONNECTION_ERROR))
 
                         elif "delete" in cmd_response.keys():
-                            print("in delete")
+                            current_topics = [ self.client_connection[key]['topic'] for key in self.client_connection]
+                            current_topics = list(set(current_topics))
                             if self.client_connection[address]['role']=="admin":
                                 topic = cmd_response["delete"]['topic']
-                                response = self.DeleteQueue(db,topic)
-                                client.send(self.getServerReply(response))
+
+                                if topic in current_topics:
+                                    client.send(self.getServerReply(TOPIC_USED_ERROR))
+                                else:
+                                    response = self.DeleteQueue(db,topic)
+                                    client.send(self.getServerReply(response))
                             else:
-                                print("in else condition")
-                                print(ADMIN_CONNECTION_ERROR)
                                 client.send(self.getServerReply(ADMIN_CONNECTION_ERROR))
 
                 else:
@@ -262,25 +260,18 @@ class ServerUtils(object):
 
 
 
-    def receive(self,db, debug):
+    def receive(self,db):
         while True:
             try:
                 client, addr = self.server.accept()
                 client.send(self.getServerReply("Welcome"))
-                #self.send_topics(client,db)
                 address = str(addr[0])+'_'+str(addr[1])
                 print(f'Connected to {str(addr)}')
                 self.client_connection[address] = {}
                 self.client_connection[address]['status'] = False
+                thread = threading.Thread(target=self.handle, args=(client,address,db,))
+                thread.start()
 
-                if debug == False:
-                    thread = threading.Thread(target=self.handle, args=(client,address,db,))
-                    thread.start()
-                else:
-                    print("here")
-                    self.handle(client,address,db)
-                    print("breaking")
-                    break
             except:
                 print("Client Left")
                 client.close()

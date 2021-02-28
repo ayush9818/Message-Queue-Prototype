@@ -1,11 +1,5 @@
 import sqlite3 as sql
-from beautifultable import BeautifulTable
 
-
-'''
-Root Table ---   [ Id (pk) , port_ip ]
-Message Table [ Id[pk] , port_ip[fk, root.port_ip], timestamp, message]
-'''
 
 class DATABASE(object):
 
@@ -113,9 +107,7 @@ class DATABASE(object):
         queue_id INTEGER,
         client_ip VARCHAR,
 
-
-
-        FOREIGN KEY(message_id) REFERENCES PUBLISHER_MESSAGES(message_id),
+        FOREIGN KEY(message_id) REFERENCES PUBLISHER_MESSAGES(message_id) ,
         FOREIGN KEY(queue_id) REFERENCES QUEUE(queue_id) ON DELETE CASCADE,
         FOREIGN KEY(client_ip) REFERENCES ROOT(client_ip) ON DELETE CASCADE
         );
@@ -126,50 +118,16 @@ class DATABASE(object):
         self.connection.commit()
 
 
-    # def print_tables(self):
-    #
-    #     cmd = """
-    #     SELECT name FROM sqlite_master WHERE type='table';
-    #     """
-    #     tables=self.cursor.execute(cmd)
-    #
-    #     db_tables=BeautifulTable()
-    #     db_tables.column_headers=["Table Id","Table Name"]
-    #
-    #
-    #     print("----------------Tables--------------------")
-    #     for idx, table in enumerate(tables):
-    #         db_tables.append_row([idx,table])
-    #     print(db_tables)
-
-
-
-    # def printMESSAGES(self):
-    #     cmd = """
-    #     SELECT * FROM MESSAGES
-    #     """
-    #     self.cursor.execute(cmd)
-    #     messages = self.cursor.fetchall()
-    #     print("-----------------USER MESSAGES-------------------- ")
-    #
-    #     message_table=BeautifulTable()
-    #     message_table.column_headers=["Message Id","User IP address","Time","Message"]
-    #     for message in messages:
-    #         message_table.append_row([message[0],message[1],message[2],message[3]])
-    #
-    #     print(message_table)
 
 
     def execute(self,command, data):
         if len(data) != 0:
             self.cursor.execute(command,data)
             response=self.cursor.fetchall()
-            #print(response)
             self.connection.commit()
             return response
         else:
             self.cursor.execute(command)
             response=self.cursor.fetchall()
-            #print(response)
             self.connection.commit()
             return response

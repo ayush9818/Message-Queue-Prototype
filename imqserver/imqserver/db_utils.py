@@ -1,8 +1,8 @@
 import sys
 import os
-
 sys.path.insert(1,os.path.dirname(os.getcwd()))
 from imqserver.database import *
+
 
 def InsertPublisherMessages(db, message):
     message_data = message.data
@@ -18,6 +18,9 @@ def GetMessageId(db,message):
 
     cmd="SELECT message_id FROM PUBLISHER_MESSAGES where publisher_ip=? and body=? and created_at=?"
     message_id=db.execute(cmd,[str(client_ip),message_data,created_at,])
+
+
+
     return message_id[0][0]
 
 def GetUnprocessedMesssages(db,messages,address):
@@ -109,7 +112,6 @@ def CheckTopic(db,topic_name):
 
 
 def RegisterTopic(db,topic_name):
-
 
     command="SELECT * FROM TOPIC"
     response=db.execute(command, [])

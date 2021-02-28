@@ -13,8 +13,6 @@ class Client(object):
     def run(self):
         client = ClientUtils()
         client.CONNECT_SERVER()
-        # receive_thread = threading.Thread(target=client.receive)
-        # receive_thread.start()
 
         write_thread = threading.Thread(target=client.write)
         write_thread.start()

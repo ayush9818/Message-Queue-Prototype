@@ -50,31 +50,20 @@ class ClientUtils():
 
 
 
-    def write(self,messages=None,debug=False):
+    def write(self):
         while True:
-            if debug==False:
-                message = input(">")
-                message_header = Request(message)
-                encoded_header = parser.encode_json(message_header)
+            message = input(">")
+            message_header = Request(message)
+            encoded_header = parser.encode_json(message_header)
 
-                try:
-                    self.client.send(str.encode(encoded_header))
-                except Exception as e:
-                    print(e)
-                response = self.rcv_msg()
-                if response == "exit":
-                    break
-            else:
-                assert messages is not None, "While Debugging Message Cant be None"
-                print("debugger")
-                for message in messages:
-                    message_header = Request(message)
-                    encoded_header = parser.encode_json(message_header)
-                    self.client.send(str.encode(encoded_header))
-                    response = self.rcv_msg()
-                    print(response)
-
-                return response
+            try:
+                self.client.send(str.encode(encoded_header))
+            except Exception as e:
+                print(e)
+            response = self.rcv_msg()
+            if response == "exit":
+                break
+            
 
 
 
