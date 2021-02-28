@@ -19,6 +19,7 @@ import imqserver.db_utils as du
 from imqserver.request import Request
 from imqserver.parser import Parser
 from imqserver.CommandParser import CommandParser
+from imqserver.errors import *
 parser = Parser()
 cmd_parser = CommandParser()
 
@@ -185,10 +186,10 @@ class ServerUtils(object):
                         role = cmd_response['connect']["role"]
                         topic = cmd_response['connect']["topic"]
                         if role not in roles_list:
-                            reply = "Error___Roles should be admin,pub or sub."
+                            reply = INVALID_ROLE_ERROR
                             client.send(self.getServerReply(reply))
                         elif role != "admin" and topic not in db_topic_list:
-                            reply = "Error___Invalid Topic"
+                            reply = INVALID_TOPIC_ERROR
                             client.send(self.getServerReply(reply))
 
                         else:
@@ -215,39 +216,42 @@ class ServerUtils(object):
                         client.send(self.getServerReply(topic_string))
                     else:
                         if self.client_connection[address]['status'] == False:
-                            client.send(self.getServerReply("Error___Not Connected"))
+                            client.send(self.getServerReply(CONNECTION_ERROR))
 
-                        if "publish" in cmd_response.keys():
+                        elif "publish" in cmd_response.keys():
                             if self.client_connection[address]["role"] == "pub":
                                 message = cmd_response["publish"]["message"]
                                 topic = self.client_connection[address]["topic"]
                                 self.PublishMessages(client,address,db,topic,message)
                                 client.send(self.getServerReply("M___Message Published"))
                             else:
-                                client.send(self.getServerReply("Error___Not Connected as Publisher"))
-                        if "pull" in cmd_response.keys():
+                                client.send(self.getServerReply(PUB_CONNECTION_ERROR))
+                        elif "pull" in cmd_response.keys():
                             if self.client_connection[address]["role"] == "sub":
                                 topic = self.client_connection[address]["topic"]
                                 messages = self.PullMessages(client,address,db,topic)
                                 print(messages)
                                 client.send(self.getServerReply("M___{}".format(messages)))
                             else:
-                                client.send(self.getServerReply("Error___Not Connected as Subscriber"))
-                        if "register" in cmd_response.keys():
+                                client.send(self.getServerReply(SUB_CONNECTION_ERROR))
+                        elif "register" in cmd_response.keys():
                             if self.client_connection[address]['role']=="admin":
                                 topic = cmd_response["register"]['topic']
                                 response = self.RegisterTopic(db,topic)
                                 client.send(self.getServerReply(response))
                             else:
-                                client.send(self.getServerReply("Error___Not Connected as Admin"))
+                                client.send(self.getServerReply(ADMIN_CONNECTION_ERROR))
 
-                        if "delete" in cmd_response.keys():
+                        elif "delete" in cmd_response.keys():
+                            print("in delete")
                             if self.client_connection[address]['role']=="admin":
                                 topic = cmd_response["delete"]['topic']
                                 response = self.DeleteQueue(db,topic)
                                 client.send(self.getServerReply(response))
                             else:
-                                client.send(self.getServerReply("Error___Not Connected as Admin"))
+                                print("in else condition")
+                                print(ADMIN_CONNECTION_ERROR)
+                                client.send(self.getServerReply(ADMIN_CONNECTION_ERROR))
 
                 else:
                     client.send(self.getServerReply(cmd_response))

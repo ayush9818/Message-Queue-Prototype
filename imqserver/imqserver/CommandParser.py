@@ -1,3 +1,6 @@
+from imqserver.errors import *
+from imqserver.constant import *
+
 
 class CommandParser(object):
 
@@ -8,12 +11,12 @@ class CommandParser(object):
         if "connect" in cmd_parts:
 
             if "-r" not in cmd_parts:
-                return "Error___Provide role. For ex :imq connect -r sub/pub/admin"
+                return PROVIDE_ROLE_ERROR
             else:
                 role = cmd_parts[cmd_parts.index("-r")+1]
                 if role != "admin":
                     if "-t" not in cmd_parts:
-                        return "Error___Topic Missing. Provide a Topic Name. For ex. imq connect -r pub -t sports"
+                        return CONNECT_TOPIC_ERROR
                     else:
                         topic = cmd_parts[cmd_parts.index("-t")+1]
                 else:
@@ -26,7 +29,7 @@ class CommandParser(object):
 
         if "publish" in cmd_parts:
             if "-m" not in cmd_parts:
-                return "Error___Provide a message to publish For ex : imq publish -m hello world"
+                return MISSING_MESSAGE_ERROR
             else:
                 message = " ".join(cmd_parts[cmd_parts.index("-m")+1:])
                 response = {"publish" : {"message" : message}}
@@ -38,7 +41,7 @@ class CommandParser(object):
 
         if "register" in cmd_parts:
             if "-t" not in cmd_parts:
-                return "Error___Provide a Topic to Register. For ex . imq register -t news"
+                return REGISTER_TOPIC_ERROR
             else:
                 topic = cmd_parts[cmd_parts.index("-t")+1]
                 response = {"register" : {"topic" : topic}}
@@ -46,7 +49,7 @@ class CommandParser(object):
 
         if "delete" in cmd_parts:
             if "-t" not in cmd_parts:
-                return "Error___Provide a Topic to Delete. For ex . imq delete -t news"
+                return DELETE_TOPIC_ERROR
             else:
                 topic = cmd_parts[cmd_parts.index("-t")+1]
                 response = {"delete" : {"topic" : topic}}
@@ -58,16 +61,16 @@ class CommandParser(object):
 
         if "help" in cmd_parts:
             if "-r" not in cmd_parts:
-                return "M___Topics: imq show_topics \nFor Client:imq help -r pub/sub/admin"
+                return IMQ_HELP_MESSAGE
             else:
                 role = cmd_parts[cmd_parts.index("-r")+1]
                 if role == "pub":
-                    return "M___Connect : imq connect -r pub -t topic_name \nPublish : imq publish -m message_text \nTermiate : imq terminate"
+                    return PUB_HELP_MESSAGE
                 if role == "sub":
-                    return "M___Connect : imq connect -r sub -t topic_name \nPull  : imq pull\nTermiate : imq terminate"
+                    return SUB_HELP_MESSAGE
                 if role == "admin":
-                    return "M___Connect : imq connect -r admin \nRegister : imq register -t topic_name \nDelete Queue: imq delete -t topic_name \nTermiate : imq terminate"
+                    return ADMIN_HELP_MESSAGE
 
 
 
-        return "Error___Not A valid Command."
+        return COMMAND_ERROR

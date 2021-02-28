@@ -1,11 +1,8 @@
-#from imqserver.database import *
-
 import sys
 import os
+
 sys.path.insert(1,os.path.dirname(os.getcwd()))
 from imqserver.database import *
-
-
 
 def InsertPublisherMessages(db, message):
     message_data = message.data
@@ -97,6 +94,19 @@ def HandleNewClient(db, address, topic, role):
         db.execute(command,[str(address),int(topic_id),str(role),])
 
     return False
+
+
+def CheckTopic(db,topic_name):
+    command="SELECT * FROM TOPIC"
+    response=db.execute(command, [])
+    isExists = False
+    for id,topic in response:
+        if topic==topic_name:
+            isExists=True
+            break
+    return isExists
+
+
 
 def RegisterTopic(db,topic_name):
 
