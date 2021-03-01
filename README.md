@@ -43,6 +43,11 @@ This is a prototype of Publisher Subscriber Architecture and message queue.
       pull messages     : imq pull
       terminate session : imq terminate
     
+    Get Topics : 
+        imq show_topics
+    
+    For help: 
+        imq help
     
 
   
